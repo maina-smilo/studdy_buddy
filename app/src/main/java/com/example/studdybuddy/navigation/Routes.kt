@@ -1,0 +1,17 @@
+package com.example.studdybuddy.navigation
+
+const val ROUTE_REGISTER = "register"
+const val ROUTE_QUESTIONNAIRE = "questionnaire"
+const val ROUTE_DASHBOARD = "dashboard"
+const val ROUTE_ACHIEVEMENTS = "achievements"
+const val ROUTE_MOOD_TRACKER = "mood_tracker"
+const val ROUTE_JOURNAL_LIST = "journal_list"
+const val ROUTE_JOURNAL_ENTRY = "journal_entry"
+const val ROUTE_STUDY_TIMER = "study_timer"
+const val ROUTE_CHATBOT = "chatbot"
+const val ROUTE_TIMETABLE_FORM = "timetable_form"
+const val ROUTE_TIMETABLE_LIST = "timetable_list"
+const val ROUTE_LOGIN = "login"
+const val ROUTE_PROFILE = "profile"
+const val ROUTE_PRESET_AVATARS = "preset_avatars"
+const val ROUTE_SPLASH = "splash"
