@@ -34,12 +34,12 @@ fun SplashScreen(navController: NavController, context: Context) {
 
         if (PreferencesHelper.isOnboardingCompleted(context)) {
             if (FirebaseAuth.getInstance().currentUser != null) {
-                navController.navigate(ROUTE_DASHBOARD) { popUpTo(0) }
+                navController.navigate(ROUTE_DASHBOARD) { popUpTo(ROUTE_LOGIN){inclusive = true} }
             } else {
-                navController.navigate(ROUTE_LOGIN) { popUpTo(0) }
+                navController.navigate(ROUTE_LOGIN) { popUpTo(ROUTE_ONBOARDING) {inclusive = true} }
             }
         } else {
-            navController.navigate(ROUTE_ONBOARDING) { popUpTo(0) }
+            navController.navigate(ROUTE_ONBOARDING) { popUpTo(navController.graph.startDestinationId){inclusive = true} }
         }
     }
 
