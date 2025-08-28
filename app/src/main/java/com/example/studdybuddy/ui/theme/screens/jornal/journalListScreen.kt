@@ -17,26 +17,33 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.studdybuddy.models.JournalEntry
 import com.example.studdybuddy.navigation.ROUTE_JOURNAL_ENTRY
-import com.example.studdybuddy.ui.theme.screens.register.FirebaseRefs
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 @Composable
 fun JournalListScreen(navController: NavController) {
+    val context = LocalContext.current
     var journalList by remember { mutableStateOf<List<JournalEntry>>(emptyList()) }
-    var journal by remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        FirebaseRefs.journalRef.orderByChild("timestamp")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val tempList = mutableListOf<JournalEntry>()
-                    for (child in snapshot.children) {
-                        child.getValue(JournalEntry::class.java)?.let { tempList.add(it) }
-                    }
-                    journalList = tempList.sortedByDescending { it.timestamp }
-                }
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
+    LaunchedEffect(uid) {
+        if (uid != null) {
+            FirebaseDatabase.getInstance()
+                .getReference("JournalEntries")
+                .child(uid)
+                .orderByChild("timestamp")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val tempList = mutableListOf<JournalEntry>()
+                        for (child in snapshot.children) {
+                            child.getValue(JournalEntry::class.java)?.let { tempList.add(it) }
+                        }
+                        journalList = tempList.sortedByDescending { it.timestamp }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+                })
+        }
     }
 
     Scaffold(
@@ -53,15 +60,20 @@ fun JournalListScreen(navController: NavController) {
                     onClick = {},
                     onEdit = {
                         entry.id?.let { id ->
-                            navController.navigate(        "journalEntry/${entry.id}?mood=${entry.mood}&moodName=${entry.moodName}&moodEmoji=${entry.moodEmoji}")
+                            navController.navigate(
+                                "journalEntry/${id}?mood=${entry.mood}&moodName=${entry.moodName}&moodEmoji=${entry.moodEmoji}"
+                            )
                         }
-                    }
-            ,
+                    },
                     onDelete = {
-                        FirebaseDatabase.getInstance()
-                            .getReference("JournalEntries")
-                            .child(entry.id )
-                            .removeValue()
+                        if (uid != null && entry.id != null) {
+                            FirebaseDatabase.getInstance()
+                                .getReference("JournalEntries")
+                                .child(uid)
+                                .child(entry.id) // ✅ delete inside current user
+                                .removeValue()
+                            Toast.makeText(context, "Journal entry deleted ✅", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 )
             }
@@ -87,28 +99,24 @@ fun JournalListItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = "${entry.moodEmoji}  ${entry.moodName}",
-                style = MaterialTheme.typography.titleMedium
-            )
+            Text("${entry.moodEmoji}  ${entry.moodName}", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = entry.date, style = MaterialTheme.typography.bodyMedium)
-            Text(text = entry.title, style = MaterialTheme.typography.titleMedium)
+            Text(entry.date, style = MaterialTheme.typography.bodyMedium)
+            Text(entry.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(6.dp))
-            val preview =
-                if (entry.text.length > 100) entry.text.substring(0, 100) + "..." else entry.text
-            Text(text = preview, style = MaterialTheme.typography.bodyMedium)
+
+            val preview = if (entry.text.length > 100) entry.text.substring(0, 100) + "..." else entry.text
+            Text(preview, style = MaterialTheme.typography.bodyMedium)
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                // Edit Button
                 IconButton(onClick = { onEdit() }) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit")
                 }
-                // Delete Button
                 IconButton(onClick = { showDeleteDialog = true }) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete")
                 }
@@ -116,7 +124,6 @@ fun JournalListItem(
         }
     }
 
-    // --- Delete confirmation dialog ---
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -125,7 +132,6 @@ fun JournalListItem(
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()
-                    Toast.makeText(context, "Journal entry deleted ✅", Toast.LENGTH_SHORT).show()
                     showDeleteDialog = false
                 }) {
                     Text("Yes", color = MaterialTheme.colorScheme.error)

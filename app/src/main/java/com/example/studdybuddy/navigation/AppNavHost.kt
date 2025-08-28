@@ -2,6 +2,7 @@ package com.example.studdybuddy.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,6 +17,7 @@ import com.example.studdybuddy.ui.theme.screens.jornal.JournalEntryScreen
 import com.example.studdybuddy.ui.theme.screens.jornal.JournalListScreen
 import com.example.studdybuddy.ui.theme.screens.login.LoginScreen
 import com.example.studdybuddy.ui.theme.screens.moodtracker.MoodTrackerScreen
+import com.example.studdybuddy.ui.theme.screens.onboarding.OnboardingScreen
 import com.example.studdybuddy.ui.theme.screens.profile.PresetAvatarsScreen
 import com.example.studdybuddy.ui.theme.screens.profile.ProfileScreen
 import com.example.studdybuddy.ui.theme.screens.questionnaire.QuestionnaireScreen
@@ -29,7 +31,10 @@ import com.example.studdybuddy.ui.theme.screens.studytimer.TimetableListScreen
 @Composable
 fun AppNavHost(navController: NavHostController= rememberNavController(), startDestination: String = ROUTE_SPLASH){
     NavHost(navController = navController, startDestination = startDestination){
-        composable(ROUTE_SPLASH){ SplashScreen(navController) }
+        composable(ROUTE_SPLASH) {
+            val context = LocalContext.current
+            SplashScreen(navController, context)
+        }
         composable(ROUTE_REGISTER){ RegisterScreen(navController) }
         composable(ROUTE_DASHBOARD){ DashboardScreen(navController) }
         composable(ROUTE_QUESTIONNAIRE){ QuestionnaireScreen(navController) }
@@ -64,15 +69,8 @@ fun AppNavHost(navController: NavHostController= rememberNavController(), startD
         composable(ROUTE_LOGIN){ LoginScreen(navController) }
         composable(ROUTE_PROFILE){ ProfileScreen(navController) }
         composable(ROUTE_PRESET_AVATARS){ PresetAvatarsScreen(navController) }
-        composable(
-            "study_timer/{durationMinutes}",
-            arguments = listOf(
-                navArgument("durationMinutes") { type = NavType.IntType }
-            )
-        ) { backStackEntry ->
-            val durationMinutes = backStackEntry.arguments?.getInt("durationMinutes") ?: 0
-            StudyTimerScreen(durationMinutes = durationMinutes, navController = navController)
-        }
+        composable(ROUTE_ONBOARDING){ OnboardingScreen(navController) }
+
 
 
 

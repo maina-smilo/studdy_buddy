@@ -291,8 +291,7 @@ fun StudyTimerScreen(navController: NavController, durationMinutes: Int = 0) {
         Spacer(modifier = Modifier.height(20.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(onClick = {navController.navigate(ROUTE_TIMETABLE_FORM)}) { Text("enter timetable") }
-            Button(onClick = {stopRingtone()}){
-                Text("stop alarm")}
+
         }
 
     }

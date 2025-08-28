@@ -70,10 +70,6 @@ fun RegisterScreen(navController: NavController) {
                 .padding(5.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Image(painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Image logo",
-            modifier = Modifier.fillMaxWidth().height(80.dp),
-            contentScale = ContentScale.Fit)
 
         OutlinedTextField(
             value = username,
@@ -170,7 +166,7 @@ fun RegisterScreen(navController: NavController) {
                 }
             }
         }
-        EducationDropdown()
+
 
 
         Button(

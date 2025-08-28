@@ -122,6 +122,11 @@ fun DashboardScreen(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (avatarUrl?.startsWith("http") == true) {
                         // Case 1: Cloudinary URL
@@ -168,23 +173,26 @@ fun DashboardScreen(navController: NavController) {
                         style = MaterialTheme.typography.titleMedium,
                         color = Color(0xFF333333)
                     )
+                }
+                    Row {
 
-                    IconButton(onClick = {
-                        FirebaseAuth.getInstance().signOut()
-                        navController.navigate(ROUTE_LOGIN) {
-                            popUpTo(0)
+                        IconButton(onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate(ROUTE_LOGIN) {
+                                popUpTo(0)
+                            }
+                        }) {
+                            Icon(Icons.Default.Logout, contentDescription = "Logout")
                         }
-                    }) {
-                        Icon(Icons.Default.Logout, contentDescription = "Logout")
-                    }
-                    IconButton(onClick = {
-                        val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto: mainanimo12@gmail.com")
-                            putExtra(Intent.EXTRA_SUBJECT, "Support Request")
+                        IconButton(onClick = {
+                            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                data = Uri.parse("mailto: mainanimo12@gmail.com")
+                                putExtra(Intent.EXTRA_SUBJECT, "Support Request")
+                            }
+                            navController.context.startActivity(intent)
+                        }) {
+                            Icon(Icons.Default.Email, contentDescription = "Support")
                         }
-                        navController.context.startActivity(intent)
-                    }) {
-                        Icon(Icons.Default.Email, contentDescription = "Support")
                     }
                 }
             }

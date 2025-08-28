@@ -1,63 +1,101 @@
 package com.example.studdybuddy.ui.theme.screens.chatbot
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.studdybuddy.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatbotScreen(navController: NavController) {
     var userInput by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf(listOf<Pair<String, Boolean>>()) }
     // Pair<message, isUser> → true = user, false = bot
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Chat history
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(messages) { (msg, isUser) ->
-                ChatMessage(msg, isUser)
-            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("🤖 Chatbot") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            Image(painter = painterResource(id = R.drawable.night),
+                contentDescription = "background image",
+                modifier = Modifier.fillMaxWidth().height(750.dp),
+                contentScale = ContentScale.FillBounds)
+
         }
 
-        // Input box
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+
         ) {
-            TextField(
-                value = userInput,
-                onValueChange = { userInput = it },
-                modifier = Modifier.weight(1f),
-                placeholder = { Text("Type here...") }
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = {
-                if (userInput.isNotBlank()) {
-                    // Add user message
-                    messages = messages + (userInput to true)
-
-                    // Get bot response
-                    val response = getBotResponse(userInput)
-                    messages = messages + (response to false)
-
-                    userInput = ""
+            // Chat history
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(messages) { (msg, isUser) ->
+                    ChatMessage(msg, isUser)
                 }
-            }) {
-                Text("Send")
+            }
+
+            // Input box
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = userInput,
+                    onValueChange = { userInput = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text("Type here...") }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    if (userInput.isNotBlank()) {
+                        // Add user message
+                        messages = messages + (userInput to true)
+
+                        // Get bot response
+                        val response = getBotResponse(userInput)
+                        messages = messages + (response to false)
+
+                        userInput = ""
+                    }
+                }) {
+                    Text("Send")
+                }
             }
         }
     }
@@ -116,7 +154,7 @@ fun getBotResponse(input: String): String {
                 "Parallel lines have so much in common… shame they’ll never meet 😂"
             ).random()
 
-        listOf("u suck", "bad joke", "knock off", "lame","haha, very funny").any { lower.contains(it) } ->
+        listOf("u suck", "bad joke", "knock off", "lame","haha, very lame").any { lower.contains(it) } ->
             listOf("Bruh 💀 harsh.", "L + ratio + ur mom joke incoming 👀", "Okay okay I’ll improve my dad joke game 😭").random()
 
         else -> listOf(

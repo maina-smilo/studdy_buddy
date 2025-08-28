@@ -9,7 +9,11 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.material3.Typography
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -49,10 +53,21 @@ fun StuddyBuddyTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    val CustomTypography = Typography(
+        bodyLarge = TextStyle(color = Color.Black),
+        bodyMedium = TextStyle(color = Color.Black),
+        bodySmall = TextStyle(color = Color.Black),
+        headlineSmall = TextStyle(color = Color.Black),
+        headlineMedium = TextStyle(color = Color.Black),
+        headlineLarge = TextStyle(color = Color.Black),
+        titleMedium = TextStyle(color = Color.Black),
+        titleLarge = TextStyle(color = Color.Black)
+    )
+
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = CustomTypography,
         content = content
     )
 }

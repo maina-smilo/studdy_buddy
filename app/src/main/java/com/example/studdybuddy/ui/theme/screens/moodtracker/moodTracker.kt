@@ -1,34 +1,30 @@
 package com.example.studdybuddy.ui.theme.screens.moodtracker
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.studdybuddy.data.MoodTrackerViewModel
+import com.example.studdybuddy.models.MoodEntry
 import com.example.studdybuddy.navigation.ROUTE_DASHBOARD
+import java.util.*
 
 @Composable
-fun MoodTrackerScreen(navController: NavController) {
+fun MoodTrackerScreen(
+    navController: NavController,
+    viewModel: MoodTrackerViewModel = viewModel() // inject VM here
+) {
     val moods = listOf(
         "😄" to "Happy",
         "😢" to "Sad",
@@ -78,7 +74,7 @@ fun MoodTrackerScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Show input for custom mood name
+        // --- Show input & actions only when mood is picked ---
         selectedMood?.let { mood ->
             OutlinedTextField(
                 value = customMoodName,
@@ -91,9 +87,17 @@ fun MoodTrackerScreen(navController: NavController) {
 
             Text(text = "Would you like to journal this?", fontSize = 16.sp)
 
+            // Save mood + go to Journal
             Button(
                 onClick = {
-                    // Navigate to journal screen with mood details
+                    val entry = MoodEntry(
+                        id = "", // will be filled by push().key
+                        emoji = mood.first,
+                        name = if (customMoodName.isNotBlank()) customMoodName else mood.second,
+                        timestamp = System.currentTimeMillis()
+                    )
+                    viewModel.addMood(entry) // ✅ save for this user only
+
                     navController.navigate("journal/${mood.second}/${customMoodName}")
                 },
                 modifier = Modifier
@@ -103,8 +107,26 @@ fun MoodTrackerScreen(navController: NavController) {
             ) {
                 Text(text = "Go to Journal ✏️")
             }
-            Button(onClick = {navController.navigate(ROUTE_DASHBOARD)}) {
-                Text(text = "Back")
+
+            // Just save mood + go back
+            Button(
+                onClick = {
+                    val entry = MoodEntry(
+                        id = "",
+                        emoji = mood.first,
+                        name = if (customMoodName.isNotBlank()) customMoodName else mood.second,
+                        timestamp = System.currentTimeMillis()
+                    )
+                    viewModel.addMood(entry)
+
+                    navController.navigate(ROUTE_DASHBOARD)
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Text(text = "Save & Back")
             }
         }
     }

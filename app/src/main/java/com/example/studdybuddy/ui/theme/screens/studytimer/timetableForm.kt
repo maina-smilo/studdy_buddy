@@ -77,20 +77,64 @@ fun TimetableFormScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Start Time Row
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            DropdownSelector("Hour", hours, startHour, { startHour = it }, Modifier.fillMaxWidth())
-            DropdownSelector("Minute", minutes, startMinute, { startMinute = it }, Modifier.fillMaxWidth())
-            DropdownSelector("AM/PM", amPmOptions, startAmPm, { startAmPm = it }, Modifier.fillMaxWidth())
-        }
 
+                DropdownSelector("Hour",
+                    hours,
+                    startHour,
+                    { startHour = it },
+                    Modifier.weight(1f)
+                )
         Spacer(modifier = Modifier.height(8.dp))
 
-        // End Time Row
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            DropdownSelector("Hour", hours, endHour, { endHour = it }, Modifier.fillMaxWidth())
-            DropdownSelector("Minute", minutes, endMinute, { endMinute = it }, Modifier.fillMaxWidth())
-            DropdownSelector("AM/PM", amPmOptions, endAmPm, { endAmPm = it }, Modifier.fillMaxWidth())
-        }
+                DropdownSelector(
+                    "Minute",
+                    minutes,
+                    startMinute,
+                    { startMinute = it },
+                    Modifier.weight(1f)
+                )
+        Spacer(modifier = Modifier.height(8.dp))
+
+                DropdownSelector(
+                    "AM/PM",
+                    amPmOptions,
+                    startAmPm,
+                    { startAmPm = it },
+                    Modifier.weight(1f)
+                )
+
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // End Time Row
+
+                DropdownSelector("Hour",
+                    hours,
+                    endHour,
+                    { endHour = it },
+                    Modifier.weight(1f)
+                )
+        Spacer(modifier = Modifier.height(8.dp))
+
+
+                DropdownSelector(
+                    "Minute",
+                    minutes,
+                    endMinute,
+                    { endMinute = it },
+                    Modifier.weight(1f)
+                )
+        Spacer(modifier = Modifier.height(8.dp))
+
+                DropdownSelector(
+                    "AM/PM",
+                    amPmOptions,
+                    endAmPm,
+                    { endAmPm = it },
+                    Modifier.weight(1f)
+                )
+            }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -152,7 +196,7 @@ fun TimetableFormScreen(
             }
         }
     }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
