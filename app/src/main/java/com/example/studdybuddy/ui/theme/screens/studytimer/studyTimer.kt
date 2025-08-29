@@ -30,10 +30,12 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.studdybuddy.R
 
 @Composable
-fun StudyTimerScreen(navController: NavController, durationMinutes: Int = 0) {
+fun StudyTimerScreen(navController: NavController,
+                     topicArg: String = "",
+                     durationMinutes: Int = 0) {
+    var topic by remember { mutableStateOf(topicArg) }
     var ringtone: Ringtone? by remember { mutableStateOf(null) }
     var showConfetti by remember { mutableStateOf(false) }
-    var topic by remember { mutableStateOf("") }
     var customMinutesInput by remember { mutableStateOf("25") }
     var customBreakInput by remember { mutableStateOf("5") }
 

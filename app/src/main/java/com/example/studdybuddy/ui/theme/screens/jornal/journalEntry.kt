@@ -45,7 +45,7 @@ fun JournalEntryScreen(
     val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
-    var passedmood by remember { mutableStateOf("") }
+    var passedmood by remember { mutableStateOf(mood) }
 
 
     // Mood list (you can expand this)
@@ -62,6 +62,15 @@ fun JournalEntryScreen(
             }
         }
     }
+    LaunchedEffect(mood, customMoodName) {
+        if (entryId.isEmpty()) { // only for NEW entries
+            passedmood = mood
+            if (!customMoodName.isNullOrEmpty()) {
+                title = customMoodName // optional: set custom mood as title
+            }
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -99,7 +108,7 @@ fun JournalEntryScreen(
                         fontSize = 28.sp,
                         modifier = Modifier
                             .clip(CircleShape)
-                            .background(if (mood == emoji) Color.Yellow else Color.Transparent)
+                            .background(if (passedmood == emoji) Color.Yellow else Color.Transparent)
                             .clickable { passedmood = emoji }
                             .padding(8.dp)
                     )

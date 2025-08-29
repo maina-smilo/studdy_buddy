@@ -88,10 +88,12 @@ fun TimetableListScreen(
 
                                 // Start Session Button
                                 Button(onClick = {
-                                    navController.navigate(ROUTE_STUDY_TIMER)
+                                    val durationMinutes = calculateDurationInMinutes(entry.startTime, entry.endTime)
+                                    navController.navigate("studyTimer/${entry.title}/$durationMinutes")
                                 }) {
                                     Text("Start Session")
                                 }
+
 
                                 Spacer(modifier = Modifier.width(8.dp))
 
