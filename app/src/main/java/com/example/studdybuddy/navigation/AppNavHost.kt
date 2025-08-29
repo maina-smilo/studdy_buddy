@@ -70,14 +70,7 @@ fun AppNavHost(navController: NavHostController= rememberNavController(), startD
         composable(ROUTE_PROFILE){ ProfileScreen(navController) }
         composable(ROUTE_PRESET_AVATARS){ PresetAvatarsScreen(navController) }
         composable(ROUTE_ONBOARDING){ OnboardingScreen(navController) }
-        composable("studyTimer/{topic}/{duration}", arguments = listOf(
-            navArgument("topic") { type = NavType.StringType },
-            navArgument("duration") { type = NavType.IntType }
-        )) { backStackEntry ->
-            val topic = backStackEntry.arguments?.getString("topic") ?: ""
-            val duration = backStackEntry.arguments?.getInt("duration") ?: 0
-            StudyTimerScreen(navController, topic, duration)
-        }
+
 
 
 

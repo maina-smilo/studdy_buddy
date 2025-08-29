@@ -47,7 +47,8 @@ fun TimetableListScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No timetable entries yet. Add one using the + button!")
+                Text("No timetable entries yet. Add one using the + button!",
+                    color = Color.White,)
             }
         } else {
             LazyColumn(
@@ -88,11 +89,12 @@ fun TimetableListScreen(
 
                                 // Start Session Button
                                 Button(onClick = {
-                                    val durationMinutes = calculateDurationInMinutes(entry.startTime, entry.endTime)
-                                    navController.navigate("studyTimer/${entry.title}/$durationMinutes")
+                                    navController.navigate(ROUTE_STUDY_TIMER)
                                 }) {
                                     Text("Start Session")
                                 }
+
+
 
 
                                 Spacer(modifier = Modifier.width(8.dp))

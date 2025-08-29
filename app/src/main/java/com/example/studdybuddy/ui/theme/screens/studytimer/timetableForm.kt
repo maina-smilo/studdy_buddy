@@ -77,6 +77,7 @@ fun TimetableFormScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Start Time Row
+        Text("Start Time")
 
                 DropdownSelector("Hour",
                     hours,
@@ -107,6 +108,7 @@ fun TimetableFormScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // End Time Row
+        Text("End Time")
 
                 DropdownSelector("Hour",
                     hours,
